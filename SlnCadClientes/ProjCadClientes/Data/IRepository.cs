@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ProjCadClientes.Data
 {
-    interface IRepository
+    public interface IRepository
     {
         void Add<T>(T entity) where T : class;
         void Update<T>(T entity) where T : class;
