@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Cliente } from '../models/cliente';
+import { ConsultaCepService } from '../services/consulta-cep.service';
+import { ClienteService } from './cliente.service';
 
 @Component({
   selector: 'app-clientes',
@@ -13,64 +15,42 @@ export class ClientesComponent implements OnInit {
   public titulo = 'Clientes'
   public clienteSelecionado: Cliente;  
   public nomeCliente: string;
+  public modo = 'post';
 
-  public clientes = [
-    {
-      "clienteId": 1,
-      "nome": "thiago luz de sousa",
-      "dataNascimento": "1996-05-06",
-      "sexo": "m",
-      "cep": "19031-230",
-      "endereco": "Rua Doutor José Carlos Franco de Carvalho",
-      "numero": 500,
-      "complemento": "",
-      "bairro": "Vila Áurea",
-      "estado": "SP",
-      "cidade": "Presidente Prudente"
-    },
-    {
-      "clienteId": 2,
-      "nome": "devanir luz de sousa",
-      "dataNascimento": "1974-10-23",
-      "sexo": "m",
-      "cep": "19025-170",
-      "endereco": "Rua Ângelo Guissi",
-      "numero": 39,
-      "complemento": "",
-      "bairro": "Parque São Matheus",
-      "estado": "SP",
-      "cidade": "Presidente Prudente"
-    },
-    {
-      "clienteId": 2,
-      "nome": "valquiria almeida luz",
-      "dataNascimento": "1974-10-23",
-      "sexo": "f",
-      "cep": "19025-170",
-      "endereco": "Rua Ângelo Guissi",
-      "numero": 39,
-      "complemento": "",
-      "bairro": "Parque São Matheus",
-      "estado": "SP",
-      "cidade": "Presidente Prudente"
-    }
-  ];
+  public clientes: Cliente[];
 
-  constructor(private fb: FormBuilder) { 
+  constructor(private fb: FormBuilder, 
+      private cerService: ConsultaCepService,
+      private clienteService: ClienteService) { 
     this.criarForm();
+
   }
 
   ngOnInit(): void {
+    this.carregarClientes();
+  }
+
+  carregarClientes() {
+    
+    this.clienteService.getAll().subscribe(
+      (clientes: Cliente[]) => {
+        this.clientes = clientes;
+      },
+      (erro: any) => {
+        console.error(erro);
+      }
+    );
   }
 
   criarForm() {
     this.clienteForm = this.fb.group({
+      clienteId: 0,
       nome: ['', Validators.required],
-      dataNascimento: [''],
-      sexo: [''],
+      dataNascimento: ['', Validators.required],
+      sexo: ['', Validators.required],
       cep: [''],
       endereco: [''],
-      numero: [''],
+      numero: 0,
       complemento: [''],
       bairro: [''],
       estado: [''],
@@ -88,8 +68,61 @@ export class ClientesComponent implements OnInit {
     this.nomeCliente = '';
   }
 
+  
+  getCep() {
+    alert('teste');
+  }
+  
+  salvarCliente(cliente: Cliente) {
+
+    if (cliente.clienteId > 0) {
+      this.modo = 'put';
+      this.clienteService.put(cliente).subscribe(
+        (retorno: any) => {
+          console.log(retorno);
+          this.carregarClientes();
+          this.voltar();
+        },
+        (erro: any) => {
+          console.log(erro);
+        }
+      );
+    } else {
+      this.modo = 'post';
+      this.clienteService.post(cliente).subscribe(
+        (retorno: any) => {
+          console.log(retorno);
+          this.carregarClientes();
+          this.voltar();
+        },
+        (erro: any) => {
+          console.log(erro);
+        }
+      );
+    }
+  }
+
   clienteSubmit() {
-    console.log(this.clienteForm.value);
+    this.salvarCliente(this.clienteForm.value);
+  }
+
+  novoCliente() {
+    this.clienteSelecionado = new Cliente();
+    this.nomeCliente = 'novo';
+    this.clienteForm.patchValue(this.clienteSelecionado);
+  }
+
+  excluirCliente(cliente: Cliente) {
+    this.clienteService.delete(cliente.clienteId).subscribe(
+      (retorno: any) => {
+        console.log(retorno);
+        this.carregarClientes();
+        this.voltar();
+      },
+      (erro: any) => {
+        console.log(erro);
+      }
+    );
   }
 
 }

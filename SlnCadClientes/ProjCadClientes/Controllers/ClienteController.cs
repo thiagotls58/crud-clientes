@@ -103,7 +103,7 @@ namespace ProjCadClientes.Controllers
 
                 if (await _repo.SaveChangesAsync())
                 {
-                    return Ok($"Cliente {ClienteId} excluído.");
+                    return Ok(new { message = $"Cliente {ClienteId} excluído." });
                 }
             }
             catch (Exception ex)
@@ -128,7 +128,7 @@ namespace ProjCadClientes.Controllers
 
                 if (await _repo.SaveChangesAsync())
                 {
-                    return Ok("OK");
+                    return Ok(new { message = "OK" });
                 }
             }
             catch (Exception ex)
