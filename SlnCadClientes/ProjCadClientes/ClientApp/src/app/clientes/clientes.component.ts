@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Cliente } from '../models/cliente';
@@ -45,7 +46,7 @@ export class ClientesComponent implements OnInit {
     this.clienteForm = this.fb.group({
       clienteId: 0,
       nome: ['', Validators.required],
-      dataNascimento: ['', Validators.required],
+      dataNascimento: [new Date(), Validators.required],
       sexo: ['', Validators.required],
       cep: [''],
       endereco: [''],
@@ -58,6 +59,7 @@ export class ClientesComponent implements OnInit {
   }
 
   clienteSelect(cliente: Cliente) {
+    console.log(cliente);
     this.clienteSelecionado = cliente;
     this.modo = 'form';
     this.clienteForm.patchValue(cliente);
@@ -92,7 +94,7 @@ export class ClientesComponent implements OnInit {
   }
   
   salvarCliente(cliente: Cliente) {
-
+    console.log(cliente);
     if (cliente.clienteId > 0) {
       this.clienteService.put(cliente).subscribe(
         (retorno: any) => {
@@ -128,7 +130,7 @@ export class ClientesComponent implements OnInit {
     this.clienteSelecionado = new Cliente();
     this.clienteSelecionado.clienteId = 0;
     this.clienteSelecionado.nome = '';
-    this.clienteSelecionado.dataNascimento = '';
+    this.clienteSelecionado.dataNascimento = new Date();
     this.clienteSelecionado.sexo = '';
     this.clienteSelecionado.cep = '';
     this.clienteSelecionado.endereco = '';
@@ -152,6 +154,14 @@ export class ClientesComponent implements OnInit {
         console.log(erro);
       }
     );
+  }
+
+  getDataFormatada(date: any) {
+    console.log(date);
+    console.log(typeof(date));
+    let vetData = date.split('-');
+    console.log(vetData);
+    return `${vetData[2]}/${vetData[1]}/${vetData[0]}`;
   }
 
 }

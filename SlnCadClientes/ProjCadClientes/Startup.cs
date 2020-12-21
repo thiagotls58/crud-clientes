@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using ProjCadClientes.Data;
-using System.IO;
 
 namespace ProjCadClientes
 {
@@ -32,9 +32,10 @@ namespace ProjCadClientes
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            services.AddControllers()
-                    .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling =
-                        Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddControllers().AddNewtonsoftJson(opt => {
+                opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                opt.SerializerSettings.DateFormatString = "yyyy-MM-dd";
+            });
 
             services.AddScoped<IRepository, Repository>();
             services.AddCors();

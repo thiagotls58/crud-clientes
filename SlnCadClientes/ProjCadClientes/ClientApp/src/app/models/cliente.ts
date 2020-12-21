@@ -1,7 +1,9 @@
+import { DatePipe } from "@angular/common";
+
 export class Cliente {
     clienteId: number;
     nome: string;
-    dataNascimento: string;
+    dataNascimento: Date;
     sexo: string;
     cep: string;
     endereco: string;

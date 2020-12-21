@@ -113,7 +113,7 @@
                 <tr *ngFor="let cliente of clientes">
                     <th scope="row">{{cliente.clienteId}}</th>
                     <td>{{cliente.nome}}</td>
-                    <td>{{cliente.dataNascimento}}</td>
+                    <td>{{getDataFormatada(cliente.dataNascimento)}}</td>
                     <td>{{cliente.cidade}}</td>
                     <td>
                         <div class="btn-group">
