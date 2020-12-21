@@ -1,7 +1,7 @@
 <div class="row">
 
-    <div class="col-sm-12" *ngIf="nomeCliente">
-        <form [formGroup]="clienteForm" (submit)="clienteSubmit()" class="mt-1">
+    <div class="col-sm-12" *ngIf="modo === 'form'">
+        <form [formGroup]="clienteForm" class="mt-1">
             <div class="form-row">
                 <div class="form-group col-sm-5">
                     <label for="formGroupExampleInput" class="font-weight-bold">Nome</label>
@@ -40,7 +40,7 @@
                 </div>
                 <div class="form-group col-sm-6 ">
                     <button class="btn btn-sm btn-outline-info" style="position: relative; top: 35px;"
-                        (click)="getCep()">Buscar</button>
+                        (click)="clkBtnBuscar()">Buscar</button>
                 </div>
             </div>
 
@@ -86,12 +86,12 @@
             <div>
                 <hr>
                 <button class="btn btn-sm btn-success" style="margin-right: 10px;"
-                    [disabled]="!clienteForm.valid">Salvar</button>
+                    [disabled]="!clienteForm.valid" (click)="clienteSubmit()">Salvar</button>
                 <button class="btn btn-sm btn-outline-danger" (click)="voltar()">Fechar</button>
             </div>
         </form>
     </div>
-    <div class="col-sm-12" *ngIf="!nomeCliente">
+    <div class="col-sm-12" *ngIf="modo === 'grid'">
         <div class="container">
             <div class="row">
                 <button class="btn btn-success" style="margin-top: 15px; margin-bottom: 15px;" (click)="novoCliente()">

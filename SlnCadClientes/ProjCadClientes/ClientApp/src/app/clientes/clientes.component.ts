@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Cep } from '../models/Cep';
 import { Cliente } from '../models/cliente';
 import { ConsultaCepService } from '../services/consulta-cep.service';
 import { ClienteService } from './cliente.service';
@@ -14,13 +15,13 @@ export class ClientesComponent implements OnInit {
   public clienteForm: FormGroup;
   public titulo = 'Clientes'
   public clienteSelecionado: Cliente;  
-  public nomeCliente: string;
-  public modo = 'post';
+  public modo = 'grid';
+  public cep = new Cep();
 
   public clientes: Cliente[];
 
   constructor(private fb: FormBuilder, 
-      private cerService: ConsultaCepService,
+      private cepService: ConsultaCepService,
       private clienteService: ClienteService) { 
     this.criarForm();
 
@@ -60,23 +61,41 @@ export class ClientesComponent implements OnInit {
 
   clienteSelect(cliente: Cliente) {
     this.clienteSelecionado = cliente;
-    this.nomeCliente = cliente.nome;
+    this.modo = 'form';
     this.clienteForm.patchValue(cliente);
   }
 
   voltar() {
-    this.nomeCliente = '';
+    this.modo = 'grid';
+  }
+
+  clkBtnBuscar() {
+    this.getCep(this.clienteForm.value);
   }
 
   
-  getCep() {
-    alert('teste');
+  getCep(cliente: Cliente) {
+    this.cepService.consultaCEP(cliente.cep)
+      .subscribe(dados => this.popularForm(dados));
+  }
+
+  popularForm(dados: any) {
+    console.log(dados);
+    this.modo = 'form';
+    
+    this.clienteSelecionado = new Cliente();
+    this.clienteSelecionado.endereco = dados.logradouro;
+    this.clienteSelecionado.complemento = dados.complemento;
+    this.clienteSelecionado.bairro = dados.bairro;
+    this.clienteSelecionado.cidade = dados.localidade;
+    this.clienteSelecionado.estado = dados.uf;
+
+    this.clienteForm.patchValue(this.clienteSelecionado);
   }
   
   salvarCliente(cliente: Cliente) {
 
     if (cliente.clienteId > 0) {
-      this.modo = 'put';
       this.clienteService.put(cliente).subscribe(
         (retorno: any) => {
           console.log(retorno);
@@ -88,7 +107,6 @@ export class ClientesComponent implements OnInit {
         }
       );
     } else {
-      this.modo = 'post';
       this.clienteService.post(cliente).subscribe(
         (retorno: any) => {
           console.log(retorno);
@@ -107,8 +125,21 @@ export class ClientesComponent implements OnInit {
   }
 
   novoCliente() {
+    this.modo = 'form';
+    
     this.clienteSelecionado = new Cliente();
-    this.nomeCliente = 'novo';
+    this.clienteSelecionado.clienteId = 0;
+    this.clienteSelecionado.nome = '';
+    this.clienteSelecionado.dataNascimento = '';
+    this.clienteSelecionado.sexo = '';
+    this.clienteSelecionado.cep = '';
+    this.clienteSelecionado.endereco = '';
+    this.clienteSelecionado.complemento = '';
+    this.clienteSelecionado.bairro = '';
+    this.clienteSelecionado.cidade = '';
+    this.clienteSelecionado.estado = '';
+    this.clienteSelecionado.numero = 0;
+
     this.clienteForm.patchValue(this.clienteSelecionado);
   }
 
