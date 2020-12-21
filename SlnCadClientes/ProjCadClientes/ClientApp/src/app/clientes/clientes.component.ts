@@ -46,7 +46,7 @@ export class ClientesComponent implements OnInit {
     this.clienteForm = this.fb.group({
       clienteId: 0,
       nome: ['', Validators.required],
-      dataNascimento: [new Date(), Validators.required],
+      dataNascimento: ['', Validators.required],
       sexo: ['', Validators.required],
       cep: [''],
       endereco: [''],
@@ -130,7 +130,7 @@ export class ClientesComponent implements OnInit {
     this.clienteSelecionado = new Cliente();
     this.clienteSelecionado.clienteId = 0;
     this.clienteSelecionado.nome = '';
-    this.clienteSelecionado.dataNascimento = new Date();
+    this.clienteSelecionado.dataNascimento = '';
     this.clienteSelecionado.sexo = '';
     this.clienteSelecionado.cep = '';
     this.clienteSelecionado.endereco = '';
@@ -156,7 +156,7 @@ export class ClientesComponent implements OnInit {
     );
   }
 
-  getDataFormatada(date: any) {
+  getDataFormatada(date: string) {
     console.log(date);
     console.log(typeof(date));
     let vetData = date.split('-');

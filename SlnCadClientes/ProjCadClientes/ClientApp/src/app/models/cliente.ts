@@ -3,7 +3,7 @@ import { DatePipe } from "@angular/common";
 export class Cliente {
     clienteId: number;
     nome: string;
-    dataNascimento: Date;
+    dataNascimento: string;
     sexo: string;
     cep: string;
     endereco: string;
