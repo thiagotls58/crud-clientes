@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Cep } from '../models/Cep';
 import { Cliente } from '../models/cliente';
 import { ConsultaCepService } from '../services/consulta-cep.service';
 import { ClienteService } from './cliente.service';
@@ -16,7 +15,6 @@ export class ClientesComponent implements OnInit {
   public titulo = 'Clientes'
   public clienteSelecionado: Cliente;  
   public modo = 'grid';
-  public cep = new Cep();
 
   public clientes: Cliente[];
 
